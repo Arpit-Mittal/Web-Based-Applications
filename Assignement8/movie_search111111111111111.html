@@ -1,0 +1,234 @@
+<html>
+<title>Movie Search</title>
+<head>
+<!---<script src="script01.js" type="text/javascript" language="Javascript">
+</script>--->
+
+<script>
+var xhr=false;
+var title;
+var type;
+var url;
+function check()
+{
+
+//alert(document.getElementById("title1").value);
+title=document.getElementById("title1").value;
+
+//alert(document.getElementById("select").options[document.getElementById("select").selectedIndex].value);
+type=document.getElementById("select").options[document.getElementById("select").selectedIndex].value;
+if((document.getElementById("title1").value)=="")
+{
+alert("Please enter the title");
+document.getElementById("updateArea11111111111").innerHTML = "";
+}
+else
+{
+
+if (window.XMLHttpRequest) {
+		xhr = new XMLHttpRequest();
+	}
+	else {
+		if (window.ActiveXObject) {
+			try {
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+				//alert(xhr);
+			}
+			catch (e) { }
+		}
+	}
+
+	if (xhr) {
+		xhr.onreadystatechange = showContents;
+		url="http://cs-server.usc.edu:39527/examples/servlet/Hworld?title="+title+"&select="+type;
+		//alert("url");
+		//alert(url);
+		xhr.open("GET",url, true);
+		xhr.setRequestHeader("Connection", "Close");
+        xhr.setRequestHeader("Method", "GET" + url + "HTTP/1.1");
+		xhr.send(null);
+	}
+	else {
+		//document.getElementById("updateArea").innerHTML = "Sorry, but I couldn't create an XMLHttpRequest";
+	}
+}
+}
+var outMsg;
+var doc;
+
+function showContents() {
+//alert("readystate");
+//alert(xhr.readyState);
+//alert("status");
+//alert(xhr.status);
+//alert("respnsetext");
+//alert(xhr.responseText);
+	if (xhr.readyState == 4) {
+	
+		if (xhr.status == 200) {
+			//outMsg = (xhr.responseXML && xhr.responseXML.contentType=="text/xml") ? xhr.responseXML.getElementsByTagName("choices")[0].textContent : xhr.responseText;
+			outMsg=xhr.responseText;
+			doc = eval('(' + xhr.responseText + ')');
+		}
+		else {
+			//var outMsg = "There was a problem with the request " + xhr.status;
+		}
+		
+	}
+//////////////////////////////Putting Results in a table
+ // alert("arpit");
+  // alert(doc.results);
+   if(doc.results.result[0].title!=="faillllllllllllllll")
+	{
+	var tab="<h1>Displaying "+doc.results.result.length+" Results for "+title+"</h1>";
+    tab+="<table align=\"center\" border=1><tr><td><h3>Image</h3></td><td><h3>Title</h3></td><td><h3>Year</h3></td><td><h3>Director</h3></td><td><h3>Rating</h3></td><td><h3>Details</h3></td><td><h3>Post to Facebook</h3></td></tr>";
+	for(i=0;i<doc.results.result.length;i++)
+	{
+	if(doc.results.result[i].title!="")
+	    {
+	tab+="<tr><td><img src="+doc.results.result[i].cover+"/></img></td><td>"+doc.results.result[i].title+"</td><td>"+doc.results.result[i].year+"</td><td>"+doc.results.result[i].director+"</td><td>"+doc.results.result[i].rating+"</td><td><a href="+doc.results.result[i].deatils+">details</a></td><td><input type=image onClick=arpit111(this.value) src=\"facebook.jpg\" name='group1' value="+i+" id='group1'></td></tr>";
+	    }
+	}
+	tab+="</table>";
+	}
+	else
+	{
+	var tab="<h1>No Movies Found.Please put correct title</h1>";
+	}
+
+	document.getElementById("updateArea11111111111").innerHTML = tab ;
+
+////////////////////////////Putting results in a table
+}
+
+function arpit111(x)
+{
+//alert("arpit");
+//alert(x);
+//alert(doc.results.result[x].cover);
+//alert(doc.results.result[x].title);
+//alert(doc.results.result[x].year);
+//alert(doc.results.result[x].director);
+//alert(doc.results.result[x].rating);
+//alert(doc.results.result[x].deatils);
+
+for(i=0;i<doc.results.result.length;i++)
+	{
+	if(doc.results.result[i].title!="")
+	    {
+		//alert(doc.results.result[i].title);
+		
+	
+	    }
+	}
+	var title=doc.results.result[x].title;
+	var released=" released in ";
+	var dec=doc.results.result[x].year;
+	var has=" has a rating of ";
+	var rating=doc.results.result[x].rating;
+	var lastthing=".";
+	var arpitfinal=title+released+dec+has+rating+lastthing;
+	var arp=doc.results.result[x].deatils+"reviews";
+	postToFeed(doc.results.result[x].cover,doc.results.result[x].title,doc.results.result[x].year,doc.results.result[x].director,arpitfinal,arp);
+}
+
+</script>
+
+</head>
+<body style="text-align:center">
+
+ <div id='fb-root'></div>
+    <script src='http://connect.facebook.net/en_US/all.js'></script>
+   <!--- <p><a onclick='postToFeed(iname,title,desc,rew,emp,emp1); return false;'>Post to Feed</a></p>
+    <p id='msg'></p>--->
+
+    <script> 
+      
+
+	   window.fbAsyncInit = function() {
+    // init the FB JS SDK
+    FB.init({
+      appId      : '278084982312181', // App ID from the App Dashboard
+      channelUrl : '//cs-server.usc.edu:39527/examples/servlets/channel.html', // Channel File for x-domain communication
+      status     : true, // check the login status upon init?
+      cookie     : true, // set sessions cookies to allow your server to access the session?
+      xfbml      : true  // parse XFBML tags on this page?
+    });
+
+    // Additional initialization code such as adding Event Listeners goes here
+
+  };
+
+  // Load the SDK's source Asynchronously
+  (function(d, debug){
+     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement('script'); js.id = id; js.async = true;
+     js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+     ref.parentNode.insertBefore(js, ref);
+   }(document, /*debug*/ false));
+
+      function postToFeed(iname,title,desc,rew,emp,emp1) {
+
+        // calling the API ...
+        var obj = {
+          method: 'feed',
+          link: 'https://developers.facebook.com/docs/reference/dialogs/',
+          picture: 'http://fbrell.com/f8.jpg',
+          name: 'Facebook Dialogs',
+          caption: 'Reference Documentation',
+          description: 'Using Dialogs to interact with users.'
+        };
+
+        function callback(response) {
+          document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+        }
+
+       FB.ui(
+  {
+    method: 'feed',
+    name: title,
+    link: 'http://developers.facebook.com/docs/reference/dialogs/',
+    picture:iname,
+    caption: 'I am interested in this movie/series/game.',
+    description: emp,
+		   properties: {"Look at the user Reviews": {text: "here", href: emp1}}
+  },
+  function(response) {
+    if (response && response.post_id) {
+      alert('Post was published.');
+    } else {
+      alert('Post was not published.');
+    }
+  }
+);
+      }
+    
+    </script>
+	<!---<input type="button" value="arpit()" onclick="postToFeed();"/>--->
+
+
+
+
+
+
+<h1 align=center>Movie Search</h1>
+<!---<form name="form" method="GET" align="center" >--->
+Title&nbsp&nbsp<input id="title1" type="title" name="title"></input>
+<br><br>Media Type
+
+<select id="select" name="select" align="center">
+  <option value="alltype">All Types</option>
+  <option value="feature">Feature Film</option>
+  <option value="tv_series">TV Series</option>
+  <option value="game">Video Game</option>
+</select>
+<br>
+<br><input id="makeTextRequest" type="submit"  value="search" align="center" onclick="check()">
+<div id="updateArea11111111111">&nbsp;</div>
+<!---</form>-->
+<!---<p><a id="makeTextRequest" href="gAddress.txt">Request a text file</a><br />
+	<a id="makeXMLRequest" href="us-states.xml">Request an XML file</a></p>--->
+	
+</body>
+</html>

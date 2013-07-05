@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <string name="app_name">My First App</string>
+    <string name="edit_message">Search the Movie Title</string>
+    <string name="button_send">Search</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string-array name="title_type">
+        <item>All Types</item>
+        <item>Feature Film</item>
+        <item>TV Series</item>
+        <item>Video Game</item>
+    </string-array>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_fetch_data">FetchData</string>
+    <string name="title_activity_facebook_post">FacebookPost</string>
+    <string name="app_id">264553527001197</string>
+
+</resources>
